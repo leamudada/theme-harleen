@@ -1,5 +1,7 @@
 # Harleen Theme. Made with <3.
 
+source (dirname (status -f))/harleen_repo_context.fish
+
 function fish_prompt
   # Retrieving status of last command
   # Directly using it to set colors for displaying prompt symbols
@@ -27,12 +29,15 @@ function fish_prompt
 
   # Displaying useful information in case of browsing a Git repository
   if git_is_repo
-    # Displaying the path we're at using short path by default.
-    # Particular treatment in case of browsing a Git repository.
-    set root_folder (command git rev-parse --show-toplevel 2>/dev/null)
-    set parent_root_folder (dirname $root_folder)
-    set cwd (echo $PWD | sed -e "s|$parent_root_folder/||")
-    echo -n -s $color_blue "("$color_dim $cwd $color_blue")" $color_off " "
+    set -l repo_context (harleen_repo_context)
+    set -l prompt_path $repo_context[1]
+    set -l repo_path $repo_context[2]
+
+    if test -n "$repo_path"
+      set prompt_path "$prompt_path:$repo_path"
+    end
+
+    echo -n -s $color_blue "(" $color_dim $prompt_path $color_blue ")" $color_off " "
 
     # Writing an indication in case there's some stashed content in the repository
     if git_is_stashed

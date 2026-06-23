@@ -31,6 +31,7 @@ Also a huge thanks to @sagebind for his really nice and helpful comments :thumbs
 * Minimal prompt,
 * Displays status of last command as color,
 * Displays useful information when browsing a Git repository,
+* Distinguishes linked Git worktrees from the main repository,
 * Displays number of ahead/behind commits between current and remote branch,
 * Displays time on the right.
 
