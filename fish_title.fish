@@ -26,16 +26,14 @@ if not functions -q harleen_repo_context
     end
 
     set -l project_name (basename (dirname $git_common_dir))
-    set -l repo_label $project_name
-
+    set -l worktree_name
     if test "$git_dir" != "$git_common_dir"
-      set -l worktree_name (basename $root_folder)
-      set repo_label "$project_name [wt:$worktree_name]"
+      set worktree_name (basename $root_folder)
     end
-
     set -l repo_path (echo $current_dir | sed -e "s|^$root_folder/*||")
 
-    echo $repo_label
+    echo $project_name
+    echo $worktree_name
     echo $repo_path
   end
 end
@@ -44,7 +42,12 @@ function fish_title
   if git_is_repo
     set -l repo_context (harleen_repo_context)
     set -l title $repo_context[1]
-    set -l repo_path $repo_context[2]
+    set -l worktree_name $repo_context[2]
+    set -l repo_path $repo_context[3]
+
+    if test -n "$worktree_name"
+      set title "$title [wt:$worktree_name]"
+    end
 
     if test -n "$repo_path"
       set title "$title:$repo_path"

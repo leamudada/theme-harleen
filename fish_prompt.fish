@@ -28,16 +28,14 @@ if not functions -q harleen_repo_context
     end
 
     set -l project_name (basename (dirname $git_common_dir))
-    set -l repo_label $project_name
-
+    set -l worktree_name
     if test "$git_dir" != "$git_common_dir"
-      set -l worktree_name (basename $root_folder)
-      set repo_label "$project_name [wt:$worktree_name]"
+      set worktree_name (basename $root_folder)
     end
-
     set -l repo_path (echo $current_dir | sed -e "s|^$root_folder/*||")
 
-    echo $repo_label
+    echo $project_name
+    echo $worktree_name
     echo $repo_path
   end
 end
@@ -57,6 +55,7 @@ function fish_prompt
   set -l color_blue   (set_color -o 03adf1)
   set -l color_purple (set_color -o a23095)
   set -l color_dim    (set_color -o c0c0c0)
+  set -l color_cyan   (set_color -o 2fd7c4)
   set -l color_off    (set_color -o normal)
 
   # Defining symbols to use for information in Git repositories
@@ -70,14 +69,18 @@ function fish_prompt
   # Displaying useful information in case of browsing a Git repository
   if git_is_repo
     set -l repo_context (harleen_repo_context)
-    set -l prompt_path $repo_context[1]
-    set -l repo_path $repo_context[2]
+    set -l project_name $repo_context[1]
+    set -l worktree_name $repo_context[2]
+    set -l repo_path $repo_context[3]
 
-    if test -n "$repo_path"
-      set prompt_path "$prompt_path:$repo_path"
+    echo -n -s $color_blue "(" $color_dim $project_name
+    if test -n "$worktree_name"
+      echo -n -s " " $color_cyan "[wt:$worktree_name]" $color_dim
     end
-
-    echo -n -s $color_blue "(" $color_dim $prompt_path $color_blue ")" $color_off " "
+    if test -n "$repo_path"
+      echo -n -s $color_blue ":" $color_dim $repo_path
+    end
+    echo -n -s $color_blue ")" $color_off " "
 
     # Writing an indication in case there's some stashed content in the repository
     if git_is_stashed
