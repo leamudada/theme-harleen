@@ -46,7 +46,7 @@ function fish_title
     set -l repo_path $repo_context[3]
 
     if test -n "$worktree_name"
-      set title "$title [wt:$worktree_name]"
+      set title "$title [worktree]"
     end
 
     if test -n "$repo_path"
