@@ -75,7 +75,7 @@ function fish_prompt
 
     echo -n -s $color_blue "(" $color_dim $project_name
     if test -n "$worktree_name"
-      echo -n -s " " $color_cyan "[wt:$worktree_name]" $color_dim
+      echo -n -s " " $color_cyan "[worktree]" $color_dim
     end
     if test -n "$repo_path"
       echo -n -s $color_blue ":" $color_dim $repo_path
